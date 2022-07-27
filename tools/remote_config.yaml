@@ -1,0 +1,14 @@
+train_dataset_path: 'dataset/validation'
+validation_dataset_path: 'dataset/validation_micro'
+device_name: 'cuda'
+batch_size: 32
+num_epochs: 2
+shuffle_queue_size: 1024
+checkpoint_file: './tools/checkpoint.pth'
+output_file: './tools/output.pth'
+model_config:
+  num_layers: 3
+  max_degree: 1
+  feature_dim: 16
+  num_modes: 5
+  num_heads: 2
