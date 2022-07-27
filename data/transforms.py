@@ -34,6 +34,8 @@ def to_device(sample, device):
 def postprocess_features(sample):
     # TODO: it would be faster to do this after batching
 
+    device = sample['state/current/valid'].device
+
     valid = sample['state/current/valid'].type(torch.bool)
     future_valid = sample['state/future/valid'].reshape(128, 80).type(torch.bool)
 
@@ -49,7 +51,7 @@ def postprocess_features(sample):
         [
             sample['state/current/velocity_x'].reshape(128, 1, 1),
             sample['state/current/velocity_y'].reshape(128, 1, 1),
-            torch.zeros(128, 1, 1),
+            torch.zeros(128, 1, 1, device=device),
         ],
         dim=-1,
     )
@@ -57,7 +59,7 @@ def postprocess_features(sample):
         [
             torch.cos(sample['state/current/bbox_yaw']).reshape(128, 1, 1),
             torch.sin(sample['state/current/bbox_yaw']).reshape(128, 1, 1),
-            torch.zeros(128, 1, 1),
+            torch.zeros(128, 1, 1, device=device),
         ],
         dim=-1,
     )
