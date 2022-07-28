@@ -1,6 +1,7 @@
 import torch
 from torch.distributions import Normal, Categorical, Independent, MixtureSameFamily
 
+counter = 0
 
 def motion_prediction_loss(predictions, targets, std_dev=1.0):
     batch_size, num_actors, num_modes, num_timestamps, _ = predictions['mode_means'].shape
@@ -18,4 +19,17 @@ def motion_prediction_loss(predictions, targets, std_dev=1.0):
 
     log_probs = position_distribution.log_prob(relative_gt_mean)
     future_valid_all_ts = torch.all(targets['future_valid'], dim=-1)
+
+    global counter
+    counter += 1
+    if counter % 10 == 0:
+        import numpy as np
+        from utils.visualization import plot_predictions
+        plot_predictions(
+            predicted_mean[0, 0].detach().cpu().numpy(),
+            np.exp(mode_log_probs[0, 0].detach().cpu().numpy()),
+            relative_gt_mean[0, 0].detach().cpu().numpy(),
+            f'plot_{counter}.png'
+        )
+
     return -torch.mean(log_probs * future_valid_all_ts)  # Average over all actors with all timestamps valid

@@ -75,11 +75,16 @@ def main(config: TrainConfig):
 
         train_loss_sum = 0.0
         num_train_batches = 0
+        first_train_batch = None
         for train_batch in tqdm.tqdm(train_loader):
+            # TODO: remove me
+            if first_train_batch is None:
+                first_train_batch = train_batch
             optimizer.zero_grad()
-            predictions = model(train_batch)
-            loss = motion_prediction_loss(predictions, train_batch)
+            predictions = model(first_train_batch)
+            loss = motion_prediction_loss(predictions, first_train_batch)
             train_loss_sum += loss.item()
+            print(loss.item())
             num_train_batches += 1
             loss.backward()
             optimizer.step()

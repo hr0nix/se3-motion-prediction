@@ -1,6 +1,6 @@
 train_dataset_path: 'dataset/train'
 validation_dataset_path: 'dataset/validation'
-device_name: 'mps'
+device_name: 'cpu'
 batch_size: 8
 num_epochs: 2
 shuffle_queue_size: 16
